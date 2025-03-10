@@ -44,7 +44,6 @@ namespace AjaxProjectExample.Controllers
 			_context.SaveChanges();
 			return NoContent();
 		}
-
 		public IActionResult GetCustomer(int id)
 		{
 			var value = _context.Customers.Find(id);
@@ -52,12 +51,34 @@ namespace AjaxProjectExample.Controllers
 			return Json(jsonValues);
 		}
 
-		public IActionResult EditCustomer(Customer customer)
+		[HttpPut]
+		public IActionResult EditCustomer([FromBody] Customer customer)
 		{
-			_context.Customers.Update(customer);
-			_context.SaveChanges();
-			return NoContent();
+			try
+			{
+				if (customer == null || customer.CustomerId == 0)
+				{
+					return BadRequest("Geçersiz müşteri verisi.");
+				}
+
+				var existingCustomer = _context.Customers.Find(customer.CustomerId);
+				if (existingCustomer == null)
+				{
+					return NotFound("Müşteri bulunamadı.");
+				}
+
+				existingCustomer.CustomerName = customer.CustomerName;
+				existingCustomer.CustomerSurname = customer.CustomerSurname;
+
+				_context.SaveChanges();
+				return Ok("Müşteri güncellendi.");
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Hata: {ex.Message} - {ex.InnerException?.Message}");
+			}
 		}
+
 
 
 	}

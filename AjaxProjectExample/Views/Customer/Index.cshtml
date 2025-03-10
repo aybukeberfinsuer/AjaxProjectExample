@@ -1,56 +1,180 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
 
 <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-<h1>Ajax Müşteri İşlemleri</h1>
-<br />
+<div class="container">
+    <h1>Ajax Müşteri İşlemleri</h1>
+    <br />
 
-<button class=" btn btn-primary" id="btn1">Müşteri Listesi</button>
+    <button class="btn btn-primary" id="btn1">Müşteri Listesi</button>
+    <button class="btn btn-info" id="btn2">Müşteri Ekle</button>
+    <button class="btn btn-danger" id="btn3">Müşteri Sil</button>
+    <button class="btn btn-success" id="btn4">Müşteri Güncelle</button>
+    <button class="btn btn-warning" id="btn5">Müşteri Getir</button>
 
-<button class=" btn btn-info" id="btn2">Müşteri Ekle</button>
-<button class="btn btn-danger" id="btn3">Müşteri Sil</button>
-<button class="btn btn-success" id="btn4">Müşteri Güncelle</button>
-<button class="btn btn-warning" id="btn5">Müşteri Getir</button>
+    <div class="alert alert-primary mt-3">Müşteri Listesi</div>
+    <div id="customerList"></div>
 
-<div class="alert alert-primary">Müşteri Listesi</div>
-<div id="customerList">
+    <hr />
+
+    <div>
+        <label>Müşteri Adı:</label>
+        <input type="text" id="txtcustomername" class="form-control" />
+        <br />
+        <label>Müşteri Soyadı:</label>
+        <input type="text" id="txtcustomersurname" class="form-control" />
+    </div>
+
+    <hr />
+
+    <div>
+        <label>Silinecek Id:</label>
+        <input type="text" id="txtdeleted" class="form-control" placeholder="Silinecek Id" />
+    </div>
+
+    <hr />
+    <div>
+        <input type="text" class="form-control" id="txteditid" placeholder="Güncellenecek Müşteri Id:" />
+        <br />
+        <input type="text" class="form-control" id="txteditname" placeholder="Güncellenecek Müşteri Adı:" />
+        <br />
+        <input type="text" class="form-control" id="txteditsurname" placeholder="Güncellenecek Müşteri Soyadı:" />
+        <br />
+
+
+    </div>
+    <hr />
+
+    <div>
+       
+        <input type="text" id="txtgetid" class="form-control" placeholder="Getirilecek Müşteri Bilgisi için Id" />
+    </div>
 </div>
 
 <script>
-    $("#btn1").click(
-        function(){
+    $("#btn1").click(function () {
         $.ajax({
-            contentType:"application/json",
-            dataType:"json",
-            type:"Get",
-            url:"/Customer/CustomerList/",
-            success: function (funk1) {
-                let customers= jQuery.parseJSON(funk1);
+            contentType: "application/json",
+            dataType: "json",
+            type: "GET",
+            url: "/Customer/CustomerList/",
+            success: function (response) {
+                let customers = JSON.parse(response);
                 console.log(customers);
 
-                let tablehtml="<table class=table table-bordered>"
-                +"<tr>"
-                +"<th>Müşteri Id</th>"
-                +"<th>Müşteri Adı</th>"
-                +"<th>Müşteri Soyadı</th>"
-                +"</tr>"
+                let tableHtml = `<table class="table table-bordered table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Müşteri Id</th>
+                                            <th>Müşteri Adı</th>
+                                            <th>Müşteri Soyadı</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
 
-                $.each(customers,(index,value)=>{
-                    tablehtml=`<tr>`
-                    +`<td>${value.CustomerId}</td>`
-                    +`<td>${value.CustomerName}</td>`
-                    +`<td>${value.CustomerSurname}</td>`
-                    +`<tr>`
+                $.each(customers, (index, value) => {
+                    tableHtml += `<tr>
+                                    <td>${value.CustomerId}</td>
+                                    <td>${value.CustomerName}</td>
+                                    <td>${value.CustomerSurname}</td>
+                                  </tr>`;
                 });
-                tablehtml+="</table>";
-                $("#customerList").html(tablehtml);
 
+                tableHtml += `</tbody></table>`;
 
+                $("#customerList").html(tableHtml);
+            },
+            error: function (xhr, status, error) {
+                console.error("Müşteri listesi alınırken hata oluştu:", error);
+                $("#customerList").html(`<div class="alert alert-danger">Müşteri listesi yüklenemedi.</div>`);
             }
         });
     });
+
+    $("#btn2").click(function(){
+        let values = {
+            CustomerName: $("#txtcustomername").val(),
+            CustomerSurname: $("#txtcustomersurname").val()
+        };
+
+        $.ajax({
+            url: "/Customer/CreateCustomer/",
+            type: "POST",
+            data: JSON.stringify(values),
+            contentType: "application/json",
+            success: function(response){
+                let result = JSON.parse(response);
+                swal("Başarılı!", "Müşteri eklendi.", "success");
+            },
+            error: function(xhr, status, error) {
+                swal("Hata!", "Müşteri eklenirken bir hata oluştu.", "error");
+            }
+        });
+    });
+
+    $("#btn3").click(function(){
+        let id = $("#txtdeleted").val();
+        if (id === "") {
+            swal("Hata!", "Silinecek ID'yi giriniz.", "warning");
+            return;
+        }
+        $.ajax({
+            url: "/Customer/DeleteCustomer/" + id,
+            type: "DELETE",
+            success: function(response){
+                swal("Silme işlemi başarılı", "Müşteri silindi", "success");
+            },
+            error: function(xhr, status, error) {
+                swal("Hata!", "Müşteri silme başarısız.", "error");
+            }
+        });
+    });
+         $("#btn4").click(function(){
+        let values = {
+            CustomerId: $("#txteditid").val(),
+            CustomerName: $("#txteditname").val(),
+            CustomerSurname: $("#txteditsurname").val()
+        };
+
+        if (!values.CustomerId || !values.CustomerName || !values.CustomerSurname) {
+            swal("Hata!", "Tüm alanları doldurmalısınız.", "warning");
+            return;
+        }
+
+        $.ajax({
+            url: "/Customer/EditCustomer/",
+            type: "PUT", // veya "POST" (backend'e bağlı)
+            contentType: "application/json",
+            data: JSON.stringify(values),
+            success: function(response) {
+                swal("Güncelleme işlemi başarılı", "Müşteri Güncellendi", "success");
+            },
+            error: function(xhr, status, error) {
+                console.error("Güncelleme hatası:", error);
+                swal("Hata!", "Müşteri güncellenirken bir hata oluştu.", "error");
+            }
+        });
+    });
+
+     $("#btn5").click(function(){
+         let id= $("#txtgetid").val();
+         $.ajax({
+             contentType:"application/json",
+             dataType:"json",
+             url:"/Customer/GetCustomer/"+id,
+             success: function(funk5){
+                  let sonuc = JSON.parse(funk5);
+                 console.log(sonuc);
+             }
+         });
+       
+    });
+
+
+
+
 </script>
