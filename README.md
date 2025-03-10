@@ -20,8 +20,4 @@
   <li><strong>Veritabanı:</strong> SQL Server</li>
 </ul>
 
-<h2>📷 Ekran Görüntüleri</h2>
-![osgqoff](https://github.com/user-attachments/assets/d9e7e718-4ce3-4f56-8797-1bd16c1c34a5)
-</p>
-
 
