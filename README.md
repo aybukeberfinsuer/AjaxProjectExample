@@ -21,7 +21,8 @@
 </ul>
 
 <h2>📷 Ekran Görüntüleri</h2>
-<p>![image](https://github.com/user-attachments/assets/ce743e00-f688-43a6-81f8-3931081074e0)
+<p>![image](https://github.com/user-attachments/assets/60094b2c-0681-4b9f-901e-858e87cf286e)
+
 </p>
 
 
