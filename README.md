@@ -20,14 +20,6 @@
   <li><strong>Veritabanı:</strong> SQL Server</li>
 </ul>
 
-<h2>📌 Kullanım</h2>
-<ol>
-  <li>Projeyi klonlayın: <code>git clone https://github.com/kullaniciadi/projeadi.git</code></li>
-  <li>Visual Studio veya bir IDE ile açın.</li>
-  <li>SQL Server'da veritabanını oluşturun ve bağlantıyı yapılandırın.</li>
-  <li>Uygulamayı başlatın ve müşteri yönetim sistemini kullanmaya başlayın!</li>
-</ol>
-
 <h2>📷 Ekran Görüntüleri</h2>
 <p>🚧 Ekran görüntüleri buraya eklenecek...</p>
 
