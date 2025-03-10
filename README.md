@@ -21,8 +21,7 @@
 </ul>
 
 <h2>📷 Ekran Görüntüleri</h2>
-<p>https://i.hizliresim.com/osgqoff.png
-
+![osgqoff](https://github.com/user-attachments/assets/d9e7e718-4ce3-4f56-8797-1bd16c1c34a5)
 </p>
 
 
